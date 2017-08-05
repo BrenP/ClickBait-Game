@@ -1,16 +1,24 @@
 # ClickBait-Game
 Python personal project
 
-Currently working on:
+Short Term Goals:
 
 -Menu that will let user input any video URL for start
 
 -Formatting the titles to look cleaner
 
--Fixing source code quality
-
 -Fix the quality of certain downloaded pictures
 
--Delete pictures on close
+-Allow a target tag
+
+-display tags of current video/show target tag
+
+-Show number of attempts
+
+
+
+Long Term Goals:
+
+-Show fastest route possible to target tag 
 
 	
