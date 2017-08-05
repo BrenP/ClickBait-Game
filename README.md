@@ -3,9 +3,7 @@ Python personal project
 
 Short Term Goals:
 
--Menu that will let user input any video URL for start
-
--Formatting the titles to look cleaner
+-Formatting the titles/menu to look better
 
 -Fix the quality of certain downloaded pictures
 
@@ -14,6 +12,7 @@ Short Term Goals:
 -display tags of current video/show target tag
 
 -Show number of attempts
+
 
 
 

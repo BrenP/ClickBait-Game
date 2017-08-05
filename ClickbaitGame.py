@@ -8,6 +8,9 @@ from bs4 import BeautifulSoup
 import os
 
 
+current_url = ''
+
+
 # The ClickbaitClient class will control the frames that are displayed for the user and initiate TKInter
 class ClickbaitClient(tk.Tk):
 
@@ -15,8 +18,10 @@ class ClickbaitClient(tk.Tk):
 
         tk.Tk.__init__(self, *args, **kwargs)
 
-        # Change the title of the window
+        # Change the title of the window and make it full screen
         tk.Tk.wm_title(self, "ClickBait Game")
+        tk.Tk.geometry(self, "{0}x{1}+0+0".format(
+            tk.Tk.winfo_screenwidth(self), tk.Tk.winfo_screenheight(self)))
 
         main_frame = tk.Frame(self)
         main_frame.pack(side="top", fill="both", expand=True)
@@ -37,6 +42,7 @@ class ClickbaitClient(tk.Tk):
     def show_frame(self, cont):
 
         frame = self.frames[cont]
+        frame.event_generate("<<ShowFrame>>")
         frame.tkraise()
 
 
@@ -47,17 +53,35 @@ class MainPage(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         # Display title
-        label = tk.Label(self,    text="ClickBait Game")
-        label.pack(pady=10, padx=10)
+        label_title = tk.Label(self, text="ClickBait Game")
+        label_title.grid(column=0, row=0, columnspan=3)
+
+        label_starting_video = tk.Label(self, text="Starting Video URL: ")
+        label_starting_video.grid(column=0, row=1)
 
         # Allow user to enter starting video
         entry_url = tk.Entry(self)
-        entry_url.pack()
+        entry_url.grid(column=1, row=1)
+
+        label_example_url = tk.Label(self, text="Ex: https://www.youtube.com/watch?v=ZbdMMI6ty0o")
+        label_example_url.config(font=("Courier", 6))
+        label_example_url.grid(column=2, row=1)
+
+        label_target_tag = tk.Label(self, text="Target Tag: ")
+        label_target_tag.grid(column=0, row=2)
+
+        entry_target_tag = tk.Entry(self)
+        entry_target_tag.grid(column=1, row=2)
 
         # Button to start the game
-        button1 = tk.Button(self, text="Start",
-                            command=lambda: controller.show_frame(YouTubeChoice))
-        button1.pack()
+        button_start_game = tk.Button(self, text="Start", command=lambda: self.start_game(entry_url.get(), controller))
+        button_start_game.grid(row=3, columnspan=3)
+
+    def start_game(self, url, controller):
+
+        global current_url
+        current_url = url
+        controller.show_frame(YouTubeChoice)
 
 
 # Youtube Choice class will display the game based on current video
@@ -67,8 +91,11 @@ class YouTubeChoice(tk.Frame):
 
         tk.Frame.__init__(self, parent)
 
-        link_url = 'https://www.youtube.com/watch?v=441ZGSk6A_8&t=0s'
-        self.youtube_update(parent, link_url)
+        self.bind("<<ShowFrame>>", lambda e: self.on_show_frame(parent))
+
+    def on_show_frame(self, parent):
+
+        self.youtube_update(parent, current_url)
 
     # Update function will change the display of the frame depending on current youtube url
     def youtube_update(self, parent, link_url):
